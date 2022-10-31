@@ -17,8 +17,7 @@ import { GqlDefaultAuthGuard } from "../../auth/gqlDefaultAuth.guard";
 import * as gqlACGuard from "../../auth/gqlAC.guard";
 import { isRecordNotFoundError } from "../../prisma.util";
 import { MetaQueryPayload } from "../../util/MetaQueryPayload";
-import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
-import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
+import { Public } from "../../decorators/public.decorator";
 import { CreateJEntityArgs } from "./CreateJEntityArgs";
 import { UpdateJEntityArgs } from "./UpdateJEntityArgs";
 import { DeleteJEntityArgs } from "./DeleteJEntityArgs";
@@ -35,12 +34,8 @@ export class JEntityResolverBase {
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder
   ) {}
 
+  @Public()
   @graphql.Query(() => MetaQueryPayload)
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "read",
-    possession: "any",
-  })
   async _jEntitiesMeta(
     @graphql.Args() args: JEntityFindManyArgs
   ): Promise<MetaQueryPayload> {
@@ -54,26 +49,16 @@ export class JEntityResolverBase {
     };
   }
 
-  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @Public()
   @graphql.Query(() => [JEntity])
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "read",
-    possession: "any",
-  })
   async jEntities(
     @graphql.Args() args: JEntityFindManyArgs
   ): Promise<JEntity[]> {
     return this.service.findMany(args);
   }
 
-  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @Public()
   @graphql.Query(() => JEntity, { nullable: true })
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "read",
-    possession: "own",
-  })
   async jEntity(
     @graphql.Args() args: JEntityFindUniqueArgs
   ): Promise<JEntity | null> {
@@ -84,13 +69,8 @@ export class JEntityResolverBase {
     return result;
   }
 
-  @common.UseInterceptors(AclValidateRequestInterceptor)
+  @Public()
   @graphql.Mutation(() => JEntity)
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "create",
-    possession: "any",
-  })
   async createJEntity(
     @graphql.Args() args: CreateJEntityArgs
   ): Promise<JEntity> {
@@ -100,13 +80,8 @@ export class JEntityResolverBase {
     });
   }
 
-  @common.UseInterceptors(AclValidateRequestInterceptor)
+  @Public()
   @graphql.Mutation(() => JEntity)
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "update",
-    possession: "any",
-  })
   async updateJEntity(
     @graphql.Args() args: UpdateJEntityArgs
   ): Promise<JEntity | null> {
@@ -125,12 +100,8 @@ export class JEntityResolverBase {
     }
   }
 
+  @Public()
   @graphql.Mutation(() => JEntity)
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "delete",
-    possession: "any",
-  })
   async deleteJEntity(
     @graphql.Args() args: DeleteJEntityArgs
   ): Promise<JEntity | null> {
