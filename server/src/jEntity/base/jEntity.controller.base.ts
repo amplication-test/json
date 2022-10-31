@@ -19,8 +19,7 @@ import { Request } from "express";
 import { plainToClass } from "class-transformer";
 import { ApiNestedQuery } from "../../decorators/api-nested-query.decorator";
 import { JEntityService } from "../jEntity.service";
-import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
-import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
+import { Public } from "../../decorators/public.decorator";
 import { JEntityCreateInput } from "./JEntityCreateInput";
 import { JEntityWhereInput } from "./JEntityWhereInput";
 import { JEntityWhereUniqueInput } from "./JEntityWhereUniqueInput";
@@ -35,12 +34,7 @@ export class JEntityControllerBase {
     protected readonly rolesBuilder: nestAccessControl.RolesBuilder
   ) {}
 
-  @common.UseInterceptors(AclValidateRequestInterceptor)
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "create",
-    possession: "any",
-  })
+  @Public()
   @common.Post()
   @swagger.ApiCreatedResponse({ type: JEntity })
   @swagger.ApiForbiddenResponse({ type: errors.ForbiddenException })
@@ -56,12 +50,7 @@ export class JEntityControllerBase {
     });
   }
 
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "read",
-    possession: "any",
-  })
+  @Public()
   @common.Get()
   @swagger.ApiOkResponse({ type: [JEntity] })
   @swagger.ApiForbiddenResponse()
@@ -79,12 +68,7 @@ export class JEntityControllerBase {
     });
   }
 
-  @common.UseInterceptors(AclFilterResponseInterceptor)
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "read",
-    possession: "own",
-  })
+  @Public()
   @common.Get("/:id")
   @swagger.ApiOkResponse({ type: JEntity })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
@@ -109,12 +93,7 @@ export class JEntityControllerBase {
     return result;
   }
 
-  @common.UseInterceptors(AclValidateRequestInterceptor)
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "update",
-    possession: "any",
-  })
+  @Public()
   @common.Patch("/:id")
   @swagger.ApiOkResponse({ type: JEntity })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
@@ -144,11 +123,7 @@ export class JEntityControllerBase {
     }
   }
 
-  @nestAccessControl.UseRoles({
-    resource: "JEntity",
-    action: "delete",
-    possession: "any",
-  })
+  @Public()
   @common.Delete("/:id")
   @swagger.ApiOkResponse({ type: JEntity })
   @swagger.ApiNotFoundResponse({ type: errors.NotFoundException })
