@@ -18,3 +18,10 @@ model User {
   updatedAt DateTime @updatedAt
   username  String   @unique
 }
+
+model JEntity {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  js        Json?
+  updatedAt DateTime @updatedAt
+}
